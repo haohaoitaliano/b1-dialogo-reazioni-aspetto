@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f3a">
+  <title>Ripasso del dialogo – Reazioni e aspetto fisico</title>
+  <style>
+    :root {
+      --ink: #173f3a;
+      --ink-soft: #506562;
+      --paper: #fffdf7;
+      --cream: #f5f0e4;
+      --line: #d9dfd9;
+      --coral: #f06f55;
+      --coral-dark: #c74c39;
+      --mint: #dcefe8;
+      --gold: #f0b84f;
+      --good: #17825e;
+      --good-bg: #e6f6ee;
+      --bad: #c23f3f;
+      --bad-bg: #fceaea;
+      --shadow: 0 16px 46px rgba(23, 63, 58, .10);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%, rgba(240,184,79,.20), transparent 24rem),
+        radial-gradient(circle at 94% 18%, rgba(98,171,151,.16), transparent 28rem),
+        var(--cream);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button, input, select { font: inherit; }
+    button, select { touch-action: manipulation; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid rgba(240,111,85,.35);
+      outline-offset: 2px;
+    }
+
+    .shell { width: min(100% - 32px, 940px); margin: 0 auto; }
+    .hero { padding: 54px 0 30px; }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 14px;
+      padding: 7px 12px;
+      border: 1px solid rgba(23,63,58,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.56);
+      font-size: .77rem;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); }
+    h1 { max-width: 780px; margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.25rem, 7vw, 4.35rem); line-height: 1.02; letter-spacing: -.045em; }
+    .hero-cn { margin: 16px 0 0; color: var(--ink-soft); font-size: clamp(1rem, 2.5vw, 1.25rem); }
+
+    .progress-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px 18px;
+      align-items: center;
+      margin-top: 30px;
+      padding: 18px 20px;
+      border: 1px solid rgba(23,63,58,.10);
+      border-radius: 18px;
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 8px 28px rgba(23,63,58,.06);
+      backdrop-filter: blur(8px);
+    }
+    .progress-label { font-weight: 800; }
+    .progress-count { color: var(--ink-soft); font-size: .9rem; font-weight: 700; }
+    .track { grid-column: 1 / -1; height: 8px; overflow: hidden; border-radius: 99px; background: #dfe5df; }
+    .track > span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--coral), var(--gold)); transition: width .35s ease; }
+
+    main { padding: 8px 0 80px; }
+    .exercise {
+      margin: 24px 0;
+      overflow: hidden;
+      border: 1px solid rgba(23,63,58,.12);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .exercise-head { position: relative; padding: 28px 30px 24px 92px; border-bottom: 1px solid var(--line); }
+    .number {
+      position: absolute;
+      top: 28px;
+      left: 28px;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      color: white;
+      background: var(--ink);
+      font-family: Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      transform: rotate(-3deg);
+    }
+    h2 { margin: 0 0 5px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.32rem, 3.5vw, 1.75rem); line-height: 1.25; }
+    .instruction-cn { margin: 0; color: var(--ink-soft); font-size: .94rem; }
+    .exercise-body { padding: 28px 30px 32px; }
+
+    .match-grid { display: grid; gap: 12px; }
+    .match-row { display: grid; grid-template-columns: 180px 1fr; gap: 14px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 15px; background: #fff; transition: .2s; }
+    .match-row.correct { border-color: #79bba3; background: var(--good-bg); }
+    .match-row.incorrect { border-color: #df8b8b; background: var(--bad-bg); }
+    .expression { display: flex; align-items: center; gap: 10px; font-weight: 850; }
+    .expression b { display: grid; place-items: center; flex: 0 0 29px; width: 29px; height: 29px; border-radius: 50%; color: var(--coral-dark); background: #fff0e9; font-size: .82rem; }
+    select, .blank {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 13px;
+      border: 1.5px solid #c8d1cc;
+      border-radius: 11px;
+      color: var(--ink);
+      background: white;
+    }
+    select:disabled, input:disabled { color: var(--ink); opacity: 1; -webkit-text-fill-color: var(--ink); }
+    .feedback { display: none; grid-column: 2; margin: -2px 2px 2px; font-size: .86rem; font-weight: 750; }
+    .incorrect .feedback { display: block; color: var(--bad); }
+
+    .subactivity + .subactivity { margin-top: 38px; padding-top: 34px; border-top: 1px dashed #c6d0ca; }
+    .subhead { margin: 0 0 4px; font-size: 1.07rem; }
+    .sub-cn { margin: 0 0 20px; color: var(--ink-soft); font-size: .9rem; }
+    .audio-wrap { margin: 20px 0; padding: 16px; border-radius: 15px; background: var(--mint); }
+    audio { display: block; width: 100%; height: 42px; }
+    .audio-note { margin: 8px 2px 0; color: var(--ink-soft); font-size: .8rem; }
+    .cloze { margin: 0; padding: 20px; border-left: 4px solid var(--gold); border-radius: 0 15px 15px 0; background: #fff9e9; font-size: 1.03rem; line-height: 2.7; }
+    .blank { display: inline-block; width: 116px; min-height: 38px; padding: 6px 9px; margin: 0 3px; line-height: 1.25; text-align: center; }
+    .blank.correct { border-color: var(--good); background: var(--good-bg); }
+    .blank.incorrect { border-color: var(--bad); background: var(--bad-bg); }
+    .inline-answer { display: none; color: var(--bad); font-size: .82rem; font-weight: 750; white-space: nowrap; }
+    .inline-answer.show { display: inline; }
+
+    .word-bank { display: flex; flex-wrap: wrap; gap: 9px; margin: 18px 0 22px; padding: 16px; border-radius: 16px; background: #f4f0e7; }
+    .word-chip {
+      min-height: 42px;
+      padding: 8px 13px;
+      border: 1px solid #bfcac4;
+      border-radius: 999px;
+      color: var(--ink);
+      background: white;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, background .15s;
+    }
+    .word-chip:hover { transform: translateY(-1px); border-color: var(--coral); }
+    .word-chip.selected { border-color: var(--coral); color: #8d3427; background: #fff0eb; box-shadow: 0 0 0 3px rgba(240,111,85,.12); }
+    .word-chip.correct { border-color: #79bba3; color: var(--good); background: var(--good-bg); cursor: default; }
+    .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 13px; }
+    .category {
+      min-height: 132px;
+      padding: 15px;
+      border: 1.5px dashed #aebdb5;
+      border-radius: 16px;
+      background: #fff;
+      cursor: pointer;
+      transition: border .15s, background .15s;
+    }
+    .category:hover, .category.active-target { border-color: var(--coral); background: #fffaf6; }
+    .category h4 { margin: 0 0 11px; font-size: .93rem; }
+    .placed { display: flex; flex-wrap: wrap; gap: 7px; }
+    .placed .word-chip { min-height: 36px; padding: 5px 10px; font-size: .86rem; }
+    .category-hint { margin: 0; color: #7a8b85; font-size: .8rem; }
+    .category-feedback { min-height: 22px; margin: 12px 0 0; color: var(--bad); font-size: .86rem; font-weight: 750; }
+
+    .situation-list { display: grid; gap: 16px; }
+    .situation { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+    .situation.correct { border-color: #79bba3; background: var(--good-bg); }
+    .situation.incorrect { border-color: #df8b8b; background: var(--bad-bg); }
+    .dialogue { margin: 0 0 15px; }
+    .dialogue strong { color: var(--coral-dark); }
+    .choices { display: grid; gap: 8px; }
+    .choice { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 9px 11px; border: 1px solid #cdd5d0; border-radius: 11px; background: white; cursor: pointer; }
+    .choice:has(input:checked) { border-color: var(--coral); box-shadow: 0 0 0 2px rgba(240,111,85,.12); }
+    .choice input { accent-color: var(--coral); }
+    .situation .feedback { grid-column: auto; margin: 10px 0 0; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 24px; }
+    .check-btn, .restart-btn, .back-btn {
+      min-height: 48px;
+      padding: 11px 19px;
+      border: 0;
+      border-radius: 12px;
+      color: white;
+      background: var(--coral);
+      box-shadow: 0 8px 18px rgba(199,76,57,.20);
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .check-btn:hover, .restart-btn:hover { background: var(--coral-dark); }
+    .check-btn:disabled { cursor: default; box-shadow: none; background: #8aac9f; }
+    .section-score { min-height: 24px; color: var(--ink-soft); font-size: .9rem; font-weight: 750; }
+
+    .result-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      overflow-y: auto;
+      padding: 34px 16px;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(240,184,79,.30), transparent 26rem),
+        radial-gradient(circle at 90% 70%, rgba(98,171,151,.23), transparent 29rem),
+        #f5f0e4;
+    }
+    .result-page.show { display: grid; place-items: center; }
+    .result-card { width: min(100%, 700px); padding: clamp(28px, 7vw, 58px); border: 1px solid rgba(23,63,58,.12); border-radius: 30px; background: var(--paper); box-shadow: 0 24px 70px rgba(23,63,58,.16); text-align: center; }
+    .result-mark { display: grid; place-items: center; width: 74px; height: 74px; margin: 0 auto 20px; border-radius: 22px; color: white; background: var(--coral); font-size: 2rem; font-weight: 900; transform: rotate(4deg); }
+    .result-card h2 { font-size: clamp(2rem, 7vw, 3.25rem); }
+    .result-cn { margin: 4px 0 28px; color: var(--ink-soft); }
+    .review-lead { margin: 0 0 16px; font-size: 1.05rem; font-weight: 850; text-align: left; }
+    .review-lead span { display: block; color: var(--ink-soft); font-size: .9rem; font-weight: 650; }
+    .review-list { display: grid; gap: 11px; margin: 0 0 28px; padding: 0; list-style: none; text-align: left; }
+    .review-item { display: grid; grid-template-columns: 25px 1fr; gap: 10px; padding: 14px 15px; border: 1px solid #cbe1d8; border-radius: 14px; background: var(--mint); }
+    .review-check { color: var(--good); font-weight: 900; }
+    .review-item strong { display: block; line-height: 1.35; }
+    .review-item span:last-child { display: block; margin-top: 3px; color: var(--ink-soft); font-size: .88rem; line-height: 1.4; }
+    .scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 auto 26px; }
+    .scorebox { padding: 18px 12px; border-radius: 16px; background: var(--mint); }
+    .scorebox strong { display: block; font-family: Georgia, serif; font-size: 2rem; line-height: 1.1; }
+    .scorebox span { color: var(--ink-soft); font-size: .82rem; font-weight: 750; }
+    .summary { margin: 0 auto 28px; max-width: 570px; }
+    .summary-cn { display: block; margin-top: 6px; color: var(--ink-soft); }
+    .restart-btn { background: var(--ink); box-shadow: 0 8px 18px rgba(23,63,58,.18); }
+    .restart-btn:hover { background: #0c2d29; }
+    .confetti { color: var(--gold); letter-spacing: .45em; margin: 0 0 8px; }
+
+    .toast { position: fixed; left: 50%; bottom: 22px; z-index: 40; max-width: calc(100% - 32px); padding: 11px 16px; border-radius: 999px; color: white; background: var(--ink); box-shadow: 0 9px 25px rgba(0,0,0,.2); font-size: .86rem; font-weight: 750; transform: translate(-50%, 150%); transition: transform .25s ease; }
+    .toast.show { transform: translate(-50%, 0); }
+
+    footer { padding: 0 0 38px; color: #74847f; text-align: center; font-size: .8rem; }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 20px, 940px); }
+      .hero { padding-top: 36px; }
+      .exercise { border-radius: 19px; }
+      .exercise-head { padding: 22px 18px 20px 72px; }
+      .number { top: 21px; left: 18px; width: 40px; height: 40px; border-radius: 12px; font-size: 1.2rem; }
+      .exercise-body { padding: 20px 16px 25px; }
+      .match-row { grid-template-columns: 1fr; gap: 9px; }
+      .feedback { grid-column: 1; }
+      .category-grid { grid-template-columns: 1fr; }
+      .cloze { padding: 15px; font-size: .97rem; line-height: 2.85; }
+      .blank { width: 104px; }
+      .actions { align-items: stretch; flex-direction: column; }
+      .check-btn { width: 100%; }
+      .section-score { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell">
+      <p class="eyebrow">Italiano · Livello B1</p>
+      <h1>Ripasso del dialogo – Reazioni e aspetto fisico</h1>
+      <p class="hero-cn">对话复习：口语反应与外貌描写</p>
+      <div class="progress-card" aria-label="Progresso degli esercizi">
+        <span class="progress-label">Il tuo percorso · 学习进度</span>
+        <span class="progress-count" id="progressCount">0 / 4 attività</span>
+        <div class="track"><span id="progressBar"></span></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="exercise" id="exercise1">
+      <div class="exercise-head">
+        <span class="number">1</span>
+        <h2>Abbina ogni espressione alla sua funzione comunicativa.</h2>
+        <p class="instruction-cn">请把每个口语表达和它的交际功能配对。</p>
+      </div>
+      <div class="exercise-body">
+        <div class="match-grid" id="matching"></div>
+        <div class="actions">
+          <button class="check-btn" id="checkMatching">Controlla · 检查答案</button>
+          <span class="section-score" id="matchingScore" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="exercise2">
+      <div class="exercise-head">
+        <span class="number">2</span>
+        <h2>Ascolto e ripasso del lessico</h2>
+        <p class="instruction-cn">听力与外貌词汇复习</p>
+      </div>
+      <div class="exercise-body">
+        <div class="subactivity" id="listeningActivity">
+          <h3 class="subhead">Ascolta l’audio e completa la descrizione di Carlo.</h3>
+          <p class="sub-cn">听音频，补全对 Carlo 外貌的描述。</p>
+          <div class="audio-wrap">
+            <audio controls preload="metadata" id="audioPlayer">
+              <source src="audio/aspetto-fisico-carlo.mp3" type="audio/mpeg">
+            </audio>
+            <p class="audio-note" id="audioNote">Audio: aspetto-fisico-carlo.mp3</p>
+          </div>
+          <p class="cloze" id="clozeText">
+            <strong>Alice:</strong> Quel ragazzo era uguale a Alessandro… non tanto
+            <input class="blank" data-answer="alto" aria-label="Risposta 1" autocomplete="off"><span class="inline-answer"></span>,
+            <input class="blank" data-answer="magro" aria-label="Risposta 2" autocomplete="off"><span class="inline-answer"></span>, con i
+            <input class="blank" data-answer="capelli" aria-label="Risposta 3" autocomplete="off"><span class="inline-answer"></span>
+            <input class="blank" data-answer="ricci" aria-label="Risposta 4" autocomplete="off"><span class="inline-answer"></span>,
+            <input class="blank" data-answer="castani" aria-label="Risposta 5" autocomplete="off"><span class="inline-answer"></span>, la
+            <input class="blank" data-answer="barba" aria-label="Risposta 6" autocomplete="off"><span class="inline-answer"></span> e gli
+            <input class="blank" data-answer="occhiali" aria-label="Risposta 7" autocomplete="off"><span class="inline-answer"></span>.<br>
+            Portava anche una
+            <input class="blank" data-answer="giacca" aria-label="Risposta 8" autocomplete="off"><span class="inline-answer"></span>
+            <input class="blank" data-answer="blu" aria-label="Risposta 9" autocomplete="off"><span class="inline-answer"></span> come la sua.
+          </p>
+          <div class="actions">
+            <button class="check-btn" id="checkListening">Controlla · 检查答案</button>
+            <span class="section-score" id="listeningScore" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div class="subactivity" id="vocabActivity">
+          <h3 class="subhead">Ricordi le parole per descrivere l’aspetto fisico di una persona? Scrivi le parole dell’elenco nel gruppo giusto.</h3>
+          <p class="sub-cn">你还记得这些描写人物外貌的词吗？请把它们放进正确的类别。</p>
+          <div class="word-bank" id="wordBank" aria-label="Elenco delle parole"></div>
+          <div class="category-grid" id="categories"></div>
+          <p class="category-feedback" id="categoryFeedback" aria-live="polite"></p>
+          <div class="actions">
+            <button class="check-btn" id="checkVocab">Controlla · 检查答案</button>
+            <span class="section-score" id="vocabScore" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="exercise3">
+      <div class="exercise-head">
+        <span class="number">3</span>
+        <h2>Scegli l’espressione più adatta in ogni situazione.</h2>
+        <p class="instruction-cn">根据对话语境，选择最合适的口语表达。</p>
+      </div>
+      <div class="exercise-body">
+        <div class="situation-list" id="situations"></div>
+        <div class="actions">
+          <button class="check-btn" id="checkSituations">Controlla · 检查答案</button>
+          <span class="section-score" id="situationsScore" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Ripasso B1 · Reazioni del parlato e aspetto fisico</footer>
+
+  <section class="result-page" id="resultPage" aria-hidden="true">
+    <div class="result-card">
+      <p class="confetti">● ✦ ●</p>
+      <div class="result-mark">✓</div>
+      <h2>Complimenti! Hai completato il ripasso.</h2>
+      <p class="result-cn">恭喜你完成了本次复习！</p>
+      <p class="review-lead">Hai ripassato:<span>你现在复习了：</span></p>
+      <ul class="review-list">
+        <li class="review-item">
+          <span class="review-check">✓</span>
+          <span><strong>Le espressioni tipiche del parlato e le loro funzioni</strong><span>常见口语表达及其交际功能</span></span>
+        </li>
+        <li class="review-item">
+          <span class="review-check">✓</span>
+          <span><strong>Il lessico per descrivere l’aspetto fisico</strong><span>描述人物外貌的词汇</span></span>
+        </li>
+        <li class="review-item">
+          <span class="review-check">✓</span>
+          <span><strong>La scelta dell’espressione più adatta in diverse situazioni</strong><span>在不同语境中选择合适的口语表达</span></span>
+        </li>
+      </ul>
+      <button class="restart-btn" id="restart">Ricomincia · 重新练习</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Le risposte dell'ascolto sono raccolte qui per poterle modificare facilmente.
+    const LISTENING_ANSWERS = ["alto", "magro", "capelli", "ricci", "castani", "barba", "occhiali", "giacca", "blu"];
+
+    const functions = {
+      1: "Esprimere sorpresa o incredulità · 表示惊讶或难以置信",
+      2: "Commentare una situazione imbarazzante · 表示“太丢脸、太尴尬了”",
+      3: "Negare con decisione · 坚决否认",
+      4: "Accettare o chiudere un argomento · 接受或结束话题",
+      5: "Mostrare comprensione · 表示理解",
+      6: "Incoraggiare qualcuno · 鼓励对方",
+      7: "Chiedere una spiegazione · 要求进一步解释",
+      8: "Dire che le cose non vanno molto bene · 表示情况不太好",
+      9: "Esprimere approvazione o soddisfazione · 表示认可或满意"
+    };
+    const matches = [
+      ["Caspita!", "1"], ["Ma dai!", "1"], ["Che figuraccia!", "2"], ["Ma no!", "3"], ["Va be’", "4"],
+      ["Immagino.", "5"], ["Allora dai!", "6"], ["Cioè?", "7"], ["Eh, insomma…", "8"], ["Bene!", "9"]
+    ];
+
+    const vocabGroups = {
+      "Altezza e corporatura": ["basso", "robusto", "magro", "alto", "di media statura", "grosso", "muscoloso"],
+      "Occhi": ["piccoli", "grandi", "verdi", "castani", "a mandorla"],
+      "Capelli": ["corti", "biondi", "lisci", "ricci", "lunghi", "castani"],
+      "Naso": ["storto", "all’insù"]
+    };
+    const vocabAnswers = Object.entries(vocabGroups).reduce((answers, [category, words]) => {
+      words.forEach(word => {
+        if (!answers[word]) answers[word] = [];
+        answers[word].push(category);
+      });
+      return answers;
+    }, {});
+    const vocabWords = ["corti", "piccoli", "storto", "basso", "robusto", "grandi", "verdi", "biondi", "lisci", "ricci", "magro", "lunghi", "alto", "di media statura", "grosso", "all’insù", "castani", "a mandorla", "muscoloso"];
+
+    const situationData = [
+      { a: "Arianna", line: "Ieri sono caduta davanti a tutti al supermercato…", b: "Marta", options: ["Che figuraccia!", "Va be’!", "Cioè?"], answer: "Che figuraccia!" },
+      { a: "Luca", line: "Ho lavorato fino alle due stanotte.", b: "Marco", options: ["Caspita!", "Bene!", "Non è assolutamente vero!"], answer: "Caspita!" },
+      { a: "Giulia", line: "Secondo me sei un po’ permalosa…", b: "Laura", options: ["Ma dai!", "Ma no!", "Allora dai!"], answer: "Ma no!" },
+      { a: "Paolo", line: "Mi ha detto che sembro suo padre…", b: "Francesca", options: ["Ma va’!", "Cioè?", "Che stanchezza!"], answer: "Ma va’!" },
+      { a: "Elena", line: "Alla fine ho conosciuto un ragazzo simpatico.", b: "Lucia", options: ["Bene!", "Ma no!", "Lasciamo perdere."], answer: "Bene!" }
+    ];
+
+    const activityDone = { matching: false, listening: false, vocab: false, situations: false };
+    const matchingEl = document.querySelector("#matching");
+    const situationsEl = document.querySelector("#situations");
+    const wordBank = document.querySelector("#wordBank");
+    const categoriesEl = document.querySelector("#categories");
+    let selectedWord = null;
+
+    function normalise(value) {
+      return value.trim().toLocaleLowerCase("it-IT").replace(/[’‘]/g, "'").replace(/\s+/g, " ");
+    }
+
+    function renderMatching() {
+      matchingEl.innerHTML = matches.map(([expression], index) => `
+        <div class="match-row" data-index="${index}">
+          <div class="expression"><b>${index + 1}</b><span>${expression}</span></div>
+          <select aria-label="Funzione comunicativa di ${expression}">
+            <option value="">Scegli una funzione…</option>
+            ${Object.entries(functions).map(([letter, label]) => `<option value="${letter}">${letter}. ${label}</option>`).join("")}
+          </select>
+          <span class="feedback"></span>
+        </div>`).join("");
+    }
+
+    function renderSituations() {
+      situationsEl.innerHTML = situationData.map((item, index) => `
+        <article class="situation" data-index="${index}">
+          <p class="dialogue"><strong>${item.a}:</strong> ${item.line}<br><strong>${item.b}:</strong> ________</p>
+          <div class="choices">
+            ${item.options.map((option, oi) => `<label class="choice"><input type="radio" name="s${index}" value="${option}" id="s${index}-${oi}"><span>${option}</span></label>`).join("")}
+          </div>
+          <span class="feedback"></span>
+        </article>`).join("");
+    }
+
+    function makeWordButton(word, correct = false) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `word-chip${correct ? " correct" : ""}`;
+      btn.textContent = word;
+      btn.dataset.word = word;
+      if (correct) btn.disabled = true;
+      return btn;
+    }
+
+    function renderVocabulary() {
+      wordBank.innerHTML = "";
+      categoriesEl.innerHTML = "";
+      vocabWords.forEach(word => wordBank.append(makeWordButton(word)));
+      Object.keys(vocabGroups).forEach(name => {
+        const category = document.createElement("section");
+        category.className = "category";
+        category.dataset.category = name;
+        category.innerHTML = `<h4>${name}</h4><div class="placed"></div><p class="category-hint">Seleziona una parola, poi tocca qui.<br>选词后点击这里</p>`;
+        categoriesEl.append(category);
+      });
+    }
+
+    function selectWord(button) {
+      if (button.disabled) return;
+      document.querySelectorAll(".word-chip.selected").forEach(el => el.classList.remove("selected"));
+      selectedWord = button.dataset.word;
+      button.classList.add("selected");
+      document.querySelectorAll(".category").forEach(el => el.classList.add("active-target"));
+    }
+
+    wordBank.addEventListener("click", event => {
+      const button = event.target.closest(".word-chip");
+      if (button) selectWord(button);
+    });
+
+    categoriesEl.addEventListener("click", event => {
+      const chip = event.target.closest(".word-chip");
+      if (chip && !chip.disabled) {
+        wordBank.append(chip);
+        selectWord(chip);
+        return;
+      }
+      const category = event.target.closest(".category");
+      if (!category || !selectedWord) return;
+      const selected = document.querySelector(`.word-chip.selected[data-word="${CSS.escape(selectedWord)}"]`);
+      if (selected) category.querySelector(".placed").append(selected);
+      selected?.classList.remove("selected");
+      selectedWord = null;
+      document.querySelectorAll(".category").forEach(el => el.classList.remove("active-target"));
+      document.querySelector("#categoryFeedback").textContent = "";
+    });
+
+    function setScore(id, correct, total) {
+      const complete = correct === total;
+      document.querySelector(id).textContent = complete
+        ? `Perfetto: ${correct}/${total} · 全部正确`
+        : `${correct}/${total} corrette · 请修改红色题目后再次检查`;
+    }
+
+    function markDone(key, done) {
+      activityDone[key] = done;
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = Object.values(activityDone).filter(Boolean).length;
+      document.querySelector("#progressCount").textContent = `${count} / 4 attività`;
+      document.querySelector("#progressBar").style.width = `${count / 4 * 100}%`;
+      if (count === 4) window.setTimeout(showResults, 350);
+    }
+
+    document.querySelector("#checkMatching").addEventListener("click", () => {
+      let correct = 0;
+      document.querySelectorAll(".match-row").forEach(row => {
+        if (row.classList.contains("correct")) { correct++; return; }
+        const index = Number(row.dataset.index);
+        const select = row.querySelector("select");
+        const answer = matches[index][1];
+        row.classList.remove("incorrect");
+        if (select.value === answer) {
+          row.classList.add("correct");
+          select.disabled = true;
+          row.querySelector(".feedback").textContent = "";
+          correct++;
+        } else {
+          row.classList.add("incorrect");
+          row.querySelector(".feedback").textContent = `Risposta corretta: ${answer}. ${functions[answer]}`;
+        }
+      });
+      setScore("#matchingScore", correct, matches.length);
+      markDone("matching", correct === matches.length);
+    });
+
+    document.querySelector("#checkListening").addEventListener("click", () => {
+      let correct = 0;
+      document.querySelectorAll(".blank").forEach((input, index) => {
+        const expected = LISTENING_ANSWERS[index];
+        const answerLabel = input.nextElementSibling;
+        input.classList.remove("incorrect");
+        answerLabel.classList.remove("show");
+        if (input.disabled || normalise(input.value) === normalise(expected)) {
+          input.value = expected;
+          input.classList.add("correct");
+          input.disabled = true;
+          correct++;
+        } else {
+          input.classList.add("incorrect");
+          answerLabel.textContent = `→ ${expected}`;
+          answerLabel.classList.add("show");
+        }
+      });
+      setScore("#listeningScore", correct, LISTENING_ANSWERS.length);
+      markDone("listening", correct === LISTENING_ANSWERS.length);
+    });
+
+    document.querySelector("#checkVocab").addEventListener("click", () => {
+      let correct = 0;
+      let placed = 0;
+      document.querySelectorAll(".category").forEach(category => {
+        const categoryName = category.dataset.category;
+        [...category.querySelectorAll(".word-chip")].forEach(chip => {
+          placed++;
+          const word = chip.dataset.word;
+          if (vocabAnswers[word].includes(categoryName)) {
+            chip.classList.remove("selected");
+            chip.classList.add("correct");
+            chip.disabled = true;
+            correct++;
+          } else {
+            chip.classList.remove("selected");
+            wordBank.append(chip);
+          }
+        });
+      });
+      selectedWord = null;
+      document.querySelectorAll(".category").forEach(el => el.classList.remove("active-target"));
+      const missing = vocabWords.length - placed;
+      const wrong = placed - correct;
+      document.querySelector("#categoryFeedback").textContent = (missing || wrong)
+        ? `${wrong ? `${wrong} parole da ricollocare. ` : ""}${missing ? `${missing} parole non ancora inserite.` : ""} 请继续修改。`
+        : "";
+      setScore("#vocabScore", correct, vocabWords.length);
+      markDone("vocab", correct === vocabWords.length);
+    });
+
+    document.querySelector("#checkSituations").addEventListener("click", () => {
+      let correct = 0;
+      document.querySelectorAll(".situation").forEach(card => {
+        if (card.classList.contains("correct")) { correct++; return; }
+        const index = Number(card.dataset.index);
+        const answer = situationData[index].answer;
+        const selected = card.querySelector("input:checked");
+        card.classList.remove("incorrect");
+        if (selected?.value === answer) {
+          card.classList.add("correct");
+          card.querySelectorAll("input").forEach(input => input.disabled = true);
+          card.querySelector(".feedback").textContent = "";
+          correct++;
+        } else {
+          card.classList.add("incorrect");
+          card.querySelector(".feedback").textContent = `Risposta corretta: ${answer}`;
+        }
+      });
+      setScore("#situationsScore", correct, situationData.length);
+      markDone("situations", correct === situationData.length);
+    });
+
+    function showResults() {
+      const page = document.querySelector("#resultPage");
+      page.classList.add("show");
+      page.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      document.querySelector("#restart").focus();
+    }
+
+    function resetAll() {
+      Object.keys(activityDone).forEach(key => activityDone[key] = false);
+      renderMatching();
+      renderSituations();
+      renderVocabulary();
+      document.querySelectorAll(".blank").forEach(input => {
+        input.value = "";
+        input.disabled = false;
+        input.classList.remove("correct", "incorrect");
+        input.nextElementSibling.classList.remove("show");
+      });
+      ["#matchingScore", "#listeningScore", "#vocabScore", "#situationsScore"].forEach(id => document.querySelector(id).textContent = "");
+      document.querySelector("#categoryFeedback").textContent = "";
+      const page = document.querySelector("#resultPage");
+      page.classList.remove("show");
+      page.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelector("#restart").addEventListener("click", resetAll);
+
+    const audioPlayer = document.querySelector("#audioPlayer");
+    audioPlayer.addEventListener("error", () => {
+      document.querySelector("#audioNote").textContent = "Audio non ancora disponibile · 音频文件暂未加入，不影响其他练习。";
+    }, true);
+
+    renderMatching();
+    renderSituations();
+    renderVocabulary();
+    LISTENING_ANSWERS.forEach((answer, index) => {
+      const input = document.querySelectorAll(".blank")[index];
+      input.dataset.answer = answer;
+    });
+  </script>
+</body>
+</html>
